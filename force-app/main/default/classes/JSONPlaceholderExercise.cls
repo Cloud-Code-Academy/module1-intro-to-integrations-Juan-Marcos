@@ -1,6 +1,6 @@
 public class JSONPlaceholderExercise {
     private static final String BASE_URL = 'https://jsonplaceholder.typicode.com';
-    
+
     /**
      * Exercise 1: Implement a GET request to fetch a post by ID
      * Endpoint: /posts/{postId}
@@ -8,15 +8,17 @@ public class JSONPlaceholderExercise {
      * @return String - The JSON response from the API
      */
     public static String getPostById(Integer postId) {
-        // TODO: Student Implementation
-        // 1. Create a new HTTP request
-        // 2. Set the endpoint URL using BASE_URL + '/posts/' + postId
-        // 3. Set the HTTP method to 'GET'
-        // 4. Send the request and get the response
-        // 5. Return the response body as string
-        return null;
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(BASE_URL + '/posts/' + postId);
+        request.setMethod('GET');
+
+        Http http = new Http();
+        HttpResponse response = http.send(request);
+        String body = response.getBody();
+
+        return body;
     }
-    
+
     /**
      * Exercise 2: Implement a POST request to create a new post
      * Endpoint: /posts
@@ -36,7 +38,7 @@ public class JSONPlaceholderExercise {
         // 7. Return the response body as string
         return null;
     }
-    
+
     /**
      * Exercise 3: Implement a PUT request to update a post
      * Endpoint: /posts/{postId}
@@ -57,7 +59,7 @@ public class JSONPlaceholderExercise {
         // 7. Return the response body as string
         return null;
     }
-    
+
     /**
      * Exercise 4: Implement a PATCH request to partially update a post
      * Endpoint: /posts/{postId}
@@ -76,7 +78,7 @@ public class JSONPlaceholderExercise {
         // 7. Return the response body as string
         return null;
     }
-    
+
     /**
      * Exercise 5: Implement a DELETE request to remove a post
      * Endpoint: /posts/{postId}
@@ -92,4 +94,4 @@ public class JSONPlaceholderExercise {
         // 5. Return the response status code
         return null;
     }
-} 
+}

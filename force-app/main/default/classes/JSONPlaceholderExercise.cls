@@ -80,14 +80,6 @@ public class JSONPlaceholderExercise {
      * @return String - The JSON response from the API
      */
     public static String patchPostTitle(Integer postId, String title) {
-        // TODO: Student Implementation
-        // 1. Create a new HTTP request
-        // 2. Set the endpoint URL using BASE_URL + '/posts/' + postId
-        // 3. Set the HTTP method to 'PATCH'
-        // 4. Create a JSON string with only the title
-        // 5. Set the request body
-        // 6. Send the request and get the response
-        // 7. Return the response body as string
         HttpRequest request = new HttpRequest();
         request.setEndpoint(BASE_URL + '/posts/' + postId);
         request.setMethod('PATCH');
@@ -107,12 +99,12 @@ public class JSONPlaceholderExercise {
      * @return Integer - The HTTP status code from the response
      */
     public static Integer deletePost(Integer postId) {
-        // TODO: Student Implementation
-        // 1. Create a new HTTP request
-        // 2. Set the endpoint URL using BASE_URL + '/posts/' + postId
-        // 3. Set the HTTP method to 'DELETE'
-        // 4. Send the request and get the response
-        // 5. Return the response status code
-        return null;
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(BASE_URL + '/posts/' + postId);
+        request.setMethod('DELETE');
+
+        HttpResponse response = new http().send(request);
+        Integer responseStatusCode = response.getStatusCode();
+        return responseStatusCode;
     }
 }

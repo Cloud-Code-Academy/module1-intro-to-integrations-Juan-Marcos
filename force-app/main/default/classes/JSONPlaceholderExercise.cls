@@ -88,7 +88,16 @@ public class JSONPlaceholderExercise {
         // 5. Set the request body
         // 6. Send the request and get the response
         // 7. Return the response body as string
-        return null;
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(BASE_URL + '/posts/' + postId);
+        request.setMethod('PATCH');
+        String titleData = '{"title":' + title + '}';
+        request.setBody(titleData);
+
+        Http http = new Http();
+        HttpResponse response = http.send(request);
+        String responseBody = response.getBody();
+        return responseBody;
     }
 
     /**

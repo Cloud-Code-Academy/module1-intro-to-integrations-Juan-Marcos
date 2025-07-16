@@ -1,9 +1,7 @@
-// Use .apex files to store anonymous Apex.
-// You can execute anonymous Apex in VS Code by selecting the
-//     apex text and running the command:
-//     SFDX: Execute Anonymous Apex with Currently Selected Text
-// You can also execute the entire file by running the command:
-//     SFDX: Execute Anonymous Apex with Editor Contents
-
+/*
 String getPostByIdResponse = JSONPlaceholderExercise.getPostById(1);
 System.debug('getPostByIdResponse:' + getPostByIdResponse);
+*/
+
+String getCreatePostResponse = JSONPlaceholderExercise.createPost('A post', 'Post Body Example', 2);
+System.debug('getCreatePostResponse: ' + getCreatePostResponse);

@@ -11,6 +11,7 @@ public class JSONPlaceholderExercise {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(BASE_URL + '/posts/' + postId);
         request.setMethod('GET');
+        request.setHeader('Content-Type', 'application/json');
 
         Http http = new Http();
         HttpResponse response = http.send(request);
@@ -37,7 +38,9 @@ public class JSONPlaceholderExercise {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(BASE_URL + '/posts');
         request.setMethod('POST');
+        request.setHeader('Content-Type', 'application/json');
         request.setBody(postData);
+
 
         Http http = new Http();
         HttpResponse response = http.send(request);
@@ -64,6 +67,7 @@ public class JSONPlaceholderExercise {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(BASE_URL + '/posts/' + postId);
         request.setMethod('PUT');
+        request.setHeader('Content-Type', 'application/json');
         request.setBody(updatedPostData);
 
         Http http = new Http();
@@ -83,8 +87,8 @@ public class JSONPlaceholderExercise {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(BASE_URL + '/posts/' + postId);
         request.setMethod('PATCH');
-        String titleData = '{"title":' + title + '}';
-        request.setBody(titleData);
+        request.setHeader('Content-Type', 'application/json');
+        request.setBody(JSON.serialize(new Map<String, Object>{'title' => title}));
 
         Http http = new Http();
         HttpResponse response = http.send(request);
@@ -102,8 +106,9 @@ public class JSONPlaceholderExercise {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(BASE_URL + '/posts/' + postId);
         request.setMethod('DELETE');
+        request.setHeader('Content-Type', 'application/json');
 
-        HttpResponse response = new http().send(request);
+        HttpResponse response = new Http().send(request);
         Integer responseStatusCode = response.getStatusCode();
         return responseStatusCode;
     }

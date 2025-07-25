@@ -106,7 +106,6 @@ public class JSONPlaceholderExercise {
         HttpResponse response = http.send(request);
         Integer statusCode = response.getStatusCode();
         if (statusCode < 200 || statusCode >= 300) {
-            System.debug('HTTP error: status code ' + statusCode + ' for endpoint: ' + endpoint + '. Body: ' + response.getBody());
             throw new CalloutException('HTTP error: status code ' + statusCode);
         }
         return response;

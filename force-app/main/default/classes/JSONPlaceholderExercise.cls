@@ -7,7 +7,7 @@ public class JSONPlaceholderExercise {
      * @param postId - The ID of the post to fetch
      * @return String - The JSON response from the API
      */
-    public static String getPostById(Integer postId) {
+    public static PostResponse getPostById(Integer postId) {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(BASE_URL + '/posts/' + postId);
         request.setMethod('GET');
@@ -15,7 +15,7 @@ public class JSONPlaceholderExercise {
 
         Http http = new Http();
         HttpResponse response = http.send(request);
-        String body = response.getBody();
+        PostResponse body = (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
 
         return body;
     }
@@ -28,7 +28,7 @@ public class JSONPlaceholderExercise {
      * @param userId - The user ID creating the post
      * @return String - The JSON response from the API
      */
-    public static String createPost(String title, String body, Integer userId) {
+    public static PostResponse createPost(String title, String body, Integer userId) {
         String postData = JSON.serialize(new Map<String, Object>{
             'title' => title,
             'body' => body,
@@ -44,7 +44,7 @@ public class JSONPlaceholderExercise {
 
         Http http = new Http();
         HttpResponse response = http.send(request);
-        String responseBody = response.getBody();
+        PostResponse responseBody = (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
         return responseBody;
     }
 
@@ -57,7 +57,7 @@ public class JSONPlaceholderExercise {
      * @param userId - The user ID
      * @return String - The JSON response from the API
      */
-    public static String updatePost(Integer postId, String title, String body, Integer userId) {
+    public static PostResponse updatePost(Integer postId, String title, String body, Integer userId) {
         String updatedPostData = JSON.serialize(new Map<String, Object>{
             'postId' => postId,
             'title' => title,
@@ -72,7 +72,7 @@ public class JSONPlaceholderExercise {
 
         Http http = new Http();
         HttpResponse response = http.send(request);
-        String responseBody = response.getBody();
+        PostResponse responseBody = (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
         return responseBody;
     }
 
@@ -83,7 +83,7 @@ public class JSONPlaceholderExercise {
      * @param title - The new title (can be null)
      * @return String - The JSON response from the API
      */
-    public static String patchPostTitle(Integer postId, String title) {
+    public static PostResponse patchPostTitle(Integer postId, String title) {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(BASE_URL + '/posts/' + postId);
         request.setMethod('PATCH');
@@ -92,7 +92,7 @@ public class JSONPlaceholderExercise {
 
         Http http = new Http();
         HttpResponse response = http.send(request);
-        String responseBody = response.getBody();
+        PostResponse responseBody = (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
         return responseBody;
     }
 
@@ -111,5 +111,12 @@ public class JSONPlaceholderExercise {
         HttpResponse response = new Http().send(request);
         Integer responseStatusCode = response.getStatusCode();
         return responseStatusCode;
+    }
+
+    public class PostResponse {
+        public Integer id;
+        public String title;
+        public String body;
+        public Integer userId;
     }
 }

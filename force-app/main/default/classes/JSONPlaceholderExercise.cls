@@ -8,16 +8,9 @@ public class JSONPlaceholderExercise {
      * @return String - The JSON response from the API
      */
     public static PostResponse getPostById(Integer postId) {
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(BASE_URL + '/posts/' + postId);
-        request.setMethod('GET');
-        request.setHeader('Content-Type', 'application/json');
-
-        Http http = new Http();
-        HttpResponse response = http.send(request);
-        PostResponse body = (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
-
-        return body;
+        String endpoint = BASE_URL + '/posts/' + postId;
+        HttpResponse response = sendRequest(endpoint, 'GET', null);
+        return (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
     }
 
     /**
@@ -29,23 +22,14 @@ public class JSONPlaceholderExercise {
      * @return String - The JSON response from the API
      */
     public static PostResponse createPost(String title, String body, Integer userId) {
+        String endpoint = BASE_URL + '/posts';
         String postData = JSON.serialize(new Map<String, Object>{
             'title' => title,
             'body' => body,
             'userId' => userId
         });
-
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(BASE_URL + '/posts');
-        request.setMethod('POST');
-        request.setHeader('Content-Type', 'application/json');
-        request.setBody(postData);
-
-
-        Http http = new Http();
-        HttpResponse response = http.send(request);
-        PostResponse responseBody = (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
-        return responseBody;
+        HttpResponse response = sendRequest(endpoint, 'POST', postData);
+        return (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
     }
 
     /**
@@ -58,22 +42,15 @@ public class JSONPlaceholderExercise {
      * @return String - The JSON response from the API
      */
     public static PostResponse updatePost(Integer postId, String title, String body, Integer userId) {
+        String endpoint = BASE_URL + '/posts/' + postId;
         String updatedPostData = JSON.serialize(new Map<String, Object>{
             'postId' => postId,
             'title' => title,
             'body' => body,
             'userId' => userId
         });
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(BASE_URL + '/posts/' + postId);
-        request.setMethod('PUT');
-        request.setHeader('Content-Type', 'application/json');
-        request.setBody(updatedPostData);
-
-        Http http = new Http();
-        HttpResponse response = http.send(request);
-        PostResponse responseBody = (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
-        return responseBody;
+        HttpResponse response = sendRequest(endpoint, 'PUT', updatedPostData);
+        return (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
     }
 
     /**
@@ -84,16 +61,10 @@ public class JSONPlaceholderExercise {
      * @return String - The JSON response from the API
      */
     public static PostResponse patchPostTitle(Integer postId, String title) {
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(BASE_URL + '/posts/' + postId);
-        request.setMethod('PATCH');
-        request.setHeader('Content-Type', 'application/json');
-        request.setBody(JSON.serialize(new Map<String, Object>{'title' => title}));
-
-        Http http = new Http();
-        HttpResponse response = http.send(request);
-        PostResponse responseBody = (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
-        return responseBody;
+        String endpoint = BASE_URL + '/posts/' + postId;
+        String patchData = JSON.serialize(new Map<String, Object>{'title' => title});
+        HttpResponse response = sendRequest(endpoint, 'PATCH', patchData);
+        return (PostResponse) JSON.deserialize(response.getBody(), PostResponse.class);
     }
 
     /**
@@ -103,14 +74,42 @@ public class JSONPlaceholderExercise {
      * @return Integer - The HTTP status code from the response
      */
     public static Integer deletePost(Integer postId) {
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(BASE_URL + '/posts/' + postId);
-        request.setMethod('DELETE');
-        request.setHeader('Content-Type', 'application/json');
+        String endpoint = BASE_URL + '/posts/' + postId;
+        HttpResponse response = sendRequest(endpoint, 'DELETE', null);
+        return response.getStatusCode();
+    }
 
-        HttpResponse response = new Http().send(request);
-        Integer responseStatusCode = response.getStatusCode();
-        return responseStatusCode;
+    /**
+     * Helper method to send HTTP requests
+     * @param endpoint - The full endpoint URL
+     * @param method - The HTTP method (GET, POST, PUT, PATCH, DELETE)
+     * @param body - The request body (can be null)
+     * @return HttpResponse - The response from the HTTP call
+     */
+    /**
+     * Helper method to send HTTP requests with error handling
+     * @param endpoint - The full endpoint URL
+     * @param method - The HTTP method (GET, POST, PUT, PATCH, DELETE)
+     * @param body - The request body (can be null)
+     * @return HttpResponse - The response from the HTTP call
+     * @throws CalloutException if the HTTP call fails
+     */
+    private static HttpResponse sendRequest(String endpoint, String method, String body) {
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(endpoint);
+        request.setMethod(method);
+        request.setHeader('Content-Type', 'application/json');
+        if (body != null) {
+            request.setBody(body);
+        }
+        Http http = new Http();
+        HttpResponse response = http.send(request);
+        Integer statusCode = response.getStatusCode();
+        if (statusCode < 200 || statusCode >= 300) {
+            System.debug('HTTP error: status code ' + statusCode + ' for endpoint: ' + endpoint + '. Body: ' + response.getBody());
+            throw new CalloutException('HTTP error: status code ' + statusCode);
+        }
+        return response;
     }
 
     public class PostResponse {
